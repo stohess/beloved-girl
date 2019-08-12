@@ -9,39 +9,32 @@
 namespace App\Services;
 
 //天气
+use GuzzleHttp\Client;
+
 class Weather
 {
     /**
-     * //获取天气
-     * @param      $cityName   //城市名称
-     * @param bool $isTomorrow //是否显示明天
+     * @param $cityName
+     * @return string
      */
-    public function getSojsonWeather($cityName, $isTomorrow = false)
+    public function getRAttodayweather($cityName)
     {
         /**
-         * 获取天气信息。网址：https://www.sojson.com/blog/305.html .
-         * :param city_name: str,城市名
-         * :return: str ,例如：2019-06-12 星期三 晴 南风 3-4级 高温 22.0℃ 低温 18.0℃ 愿你拥有比阳光明媚的心情
-         **/
-        if($isTomorrow) {
-
-        } else {
-
-        }
-    }
-
-
-    public function getSojsonWeatherTomorrow($cityName)
-    {
-        /**
-         * 获取明日天气信息。网址：https://www.sojson.com/blog/305.html .
-         * :param city_name: str,城市名
-         * :return: str ,例如：2019-06-12 星期三 晴 南风 3-4级 高温 22.0℃ 低温 18.0℃ 愿你拥有比阳光明媚的心情
+         * 获取特定城市今日天气
+         * https://github.com/MZCretin/RollToolsApi#获取特定城市今日天气
+         * :param cityname:str 传入你需要查询的城市，请尽量传入完整值，否则系统会自行匹配，可能会有误差
+         * :return:str 天气(2019-06-12 星期三 晴 南风 3-4级 高温 22.0℃ 低温 18.0℃ 愿你拥有比阳光明媚的心情)
          */
-        if (!$cityName) {
-            return null;
+        $api = 'https://www.mxnzp.com/api/weather/current/';
+        $response = app(Client::class)->get($api . $cityName);
+        $weekarray = ["日", "一", "二", "三", "四", "五", "六"];
+        if($response->getStatusCode() == 200) {
+            $resp = json_decode($response->getBody());
+            if($resp != null && $resp->code == 1) {
+                $data = $resp->data;
+                return "【{$cityName}星期{$weekarray[date('w')]}天气】{$data->weather},【气温】{$data->temp}";
+            }
         }
-
-
     }
 }
+

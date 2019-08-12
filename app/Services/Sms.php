@@ -14,20 +14,31 @@ use AlibabaCloud\Client\Exception\ServerException;
 
 class Sms
 {
-    public function SendMessage($mobile, $content, $template)
+    public $startDay = "2019-07-28";
+
+    /**
+     * @param $mobile
+     * @param $template
+     * @return \AlibabaCloud\Client\Result\Result
+     * @throws ClientException
+     * @throws ServerException
+     */
+    public function SendMessage($mobile, $template)
     {
         $region_id = env("region_id");
         $sign_name = env("sign_name");
         $access_Id = env("access_Id");
         $access_secret = env("access_secret");
         AlibabaCloud::accessKeyClient($access_Id, $access_secret)->regionId($region_id)->asDefaultClient();
+        $data = [
+            "name" => "小可爱",
+            "hour" => "早上",
+            "str"  => app(Weather::class)->getRAttodayweather("海珠"),
+            "day"  => $this->diffBetweenTwoDays($this->startDay, date("Y-m-d")),
+            'msg'  => app(Oneword::class)->getLimit(20),
+        ];
+        $data = json_encode($data);
         try {
-            $data = [
-                "name"    => "小可爱",
-                'content' => $content,
-                "time"    => date('Y-m-d H:i:s'),
-            ];
-            $data = json_encode($data);
             $result = AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
                 'query' => [
                     'RegionId'      => "default",
@@ -37,11 +48,40 @@ class Sms
                     'TemplateParam' => $data,
                 ]
             ])->request();
-            dd($result->toArray());
+            return $result;
         } catch (ClientException $e) {
-            dd($e->getErrorMessage());
+            return AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
+                'query' => [
+                    'RegionId'      => "default",
+                    'PhoneNumbers'  => $mobile,
+                    'SignName'      => $sign_name,
+                    'TemplateCode'  => $template,
+                    'TemplateParam' => $data,
+                ]
+            ])->request();
         } catch (ServerException $e) {
-            dd($e->getErrorMessage());
+            return AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
+                'query' => [
+                    'RegionId'      => "default",
+                    'PhoneNumbers'  => $mobile,
+                    'SignName'      => $sign_name,
+                    'TemplateCode'  => $template,
+                    'TemplateParam' => $data,
+                ]
+            ])->request();
         }
+    }
+
+    function diffBetweenTwoDays($day1, $day2)
+    {
+        $second1 = strtotime($day1);
+        $second2 = strtotime($day2);
+
+        if($second1 < $second2) {
+            $tmp = $second2;
+            $second2 = $second1;
+            $second1 = $tmp;
+        }
+        return ($second1 - $second2) / 86400;
     }
 }
