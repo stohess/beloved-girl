@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Services\Sms;
-use App\Services\Weather;
 
 class SmsController
 {
@@ -18,8 +17,7 @@ class SmsController
 
     public function SendMessage()
     {
-        dd((new Sms())->SendMessage(17600085955, app(Weather::class)->getRAttodayweather("海珠"),
-            "SMS_172208160"));
+        dd((new Sms())->SendMessage(17600085955, "SMS_172208160"));
     }
 
 }

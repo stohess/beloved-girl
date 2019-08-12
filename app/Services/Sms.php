@@ -19,7 +19,6 @@ class Sms
     /**
      * @param $mobile
      * @param $template
-     * @return \AlibabaCloud\Client\Result\Result
      * @throws ClientException
      * @throws ServerException
      */
