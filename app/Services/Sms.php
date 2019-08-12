@@ -48,9 +48,9 @@ class Sms
                     'TemplateParam' => $data,
                 ]
             ])->request();
-            return $result;
+            dd($result->toArray());
         } catch (ClientException $e) {
-            return AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
+            $result = AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
                 'query' => [
                     'RegionId'      => "default",
                     'PhoneNumbers'  => $mobile,
@@ -59,8 +59,9 @@ class Sms
                     'TemplateParam' => $data,
                 ]
             ])->request();
+            dd($result->toArray());
         } catch (ServerException $e) {
-            return AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
+            $result = AlibabaCloud::rpc()->product('Dysmsapi')->version('2017-05-25')->action('SendSms')->method('POST')->host('dysmsapi.aliyuncs.com')->options([
                 'query' => [
                     'RegionId'      => "default",
                     'PhoneNumbers'  => $mobile,
@@ -69,6 +70,7 @@ class Sms
                     'TemplateParam' => $data,
                 ]
             ])->request();
+            dd($result->toArray());
         }
     }
 

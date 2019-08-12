@@ -18,7 +18,7 @@ class SmsController
 
     public function SendMessage()
     {
-        return response()->json((new Sms())->SendMessage(17600085955, app(Weather::class)->getRAttodayweather("海珠"),
+        dd((new Sms())->SendMessage(17600085955, app(Weather::class)->getRAttodayweather("海珠"),
             "SMS_172208160"));
     }
 
