@@ -31,7 +31,7 @@ class Sms
         AlibabaCloud::accessKeyClient($access_Id, $access_secret)->regionId($region_id)->asDefaultClient();
         $data = [
             "name" => "小可爱",
-            "hour" => "早上",
+            "hour" => date("Y-m-d"),
             "str"  => app(Weather::class)->getRAttodayweather("海珠"),
             "day"  => $this->diffBetweenTwoDays($this->startDay, date("Y-m-d")),
             'msg'  => app(Oneword::class)->getLimit(20),
