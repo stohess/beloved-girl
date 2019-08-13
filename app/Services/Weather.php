@@ -32,7 +32,7 @@ class Weather
             $resp = json_decode($response->getBody());
             if($resp != null && $resp->code == 1) {
                 $data = $resp->data;
-                return "【{$cityName}星期{$weekarray[date('w')]}天气】{$data->weather},【气温】{$data->temp}";
+                return "[{$cityName}星期{$weekarray[date('w')]}天气] {$data->weather},[气温]{$data->temp}";
             }
         }
     }
