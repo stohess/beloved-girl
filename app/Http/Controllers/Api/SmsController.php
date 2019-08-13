@@ -13,11 +13,11 @@ use App\Services\Sms;
 class SmsController
 {
 
-    const phone = "17665161196";
+    public $phone = "17665161196";
 
     public function SendMessage()
     {
-        dd((new Sms())->SendMessage(phone, "SMS_172208160"));
+        dd((new Sms())->SendMessage($this->phone, "SMS_172208160"));
     }
 
 }
