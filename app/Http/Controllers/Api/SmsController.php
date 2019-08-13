@@ -17,7 +17,7 @@ class SmsController
 
     public function SendMessage()
     {
-        dd((new Sms())->SendMessage(17600085955, "SMS_172208160"));
+        dd((new Sms())->SendMessage(phone, "SMS_172208160"));
     }
 
 }
